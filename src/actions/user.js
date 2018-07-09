@@ -14,7 +14,7 @@ export const fetchFailure = failure => ({
   failure,
 });
 
-export const fetchCategories = url => dispatch => {
+export const fetchUser = url => dispatch => {
   dispatch(fetchRequest());
   return fetch(url)
     .then(response => {

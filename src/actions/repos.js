@@ -14,7 +14,7 @@ export const fetchFailure = failure => ({
   failure,
 });
 
-export const fetchFact = url => dispatch => {
+export const fetchRepos = url => dispatch => {
   dispatch(fetchRequest());
   return fetch(url)
     .then(response => {
