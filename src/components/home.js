@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Input, Button, Grid, Card, Image, Icon, Message } from 'semantic-ui-react'
 import { fetchUser } from '../actions/user';
 import { fetchRepos } from '../actions/repos';
+import Modal from './modal';
 
 export class Home extends Component {
 
@@ -11,6 +12,7 @@ export class Home extends Component {
     super();
     this.state = {
       username: '',
+      modalOpen: false
     };
   }
 
@@ -26,43 +28,22 @@ export class Home extends Component {
     
   }
 
-  render() {
+  openModal = () => {
     const { username } = this.state;
-    // const { user: { fetching: fetchingUser, user: githubUser }} = this.props;
-    const fetchingUser = false;
-    const githubUser = {
-  "login": "andela-jkithome",
-  "id": 13940216,
-  "node_id": "MDQ6VXNlcjEzOTQwMjE2",
-  "avatar_url": "https://avatars0.githubusercontent.com/u/13940216?v=4",
-  "gravatar_id": "",
-  "url": "https://api.github.com/users/andela-jkithome",
-  "html_url": "https://github.com/andela-jkithome",
-  "followers_url": "https://api.github.com/users/andela-jkithome/followers",
-  "following_url": "https://api.github.com/users/andela-jkithome/following{/other_user}",
-  "gists_url": "https://api.github.com/users/andela-jkithome/gists{/gist_id}",
-  "starred_url": "https://api.github.com/users/andela-jkithome/starred{/owner}{/repo}",
-  "subscriptions_url": "https://api.github.com/users/andela-jkithome/subscriptions",
-  "organizations_url": "https://api.github.com/users/andela-jkithome/orgs",
-  "repos_url": "https://api.github.com/users/andela-jkithome/repos",
-  "events_url": "https://api.github.com/users/andela-jkithome/events{/privacy}",
-  "received_events_url": "https://api.github.com/users/andela-jkithome/received_events",
-  "type": "User",
-  "site_admin": false,
-  "name": "Jeremy Kithome",
-  "company": "Andela",
-  "blog": "",
-  "location": "Nairobi",
-  "email": null,
-  "hireable": null,
-  "bio": null,
-  "public_repos": 35,
-  "public_gists": 0,
-  "followers": 39,
-  "following": 15,
-  "created_at": "2015-08-24T07:15:20Z",
-  "updated_at": "2018-05-09T19:09:50Z"
-}
+    this.setState({modalOpen: true });
+    const { fetchRepos } = this.props;
+    let url = `https://api.github.com/users/${username}/repos`;
+    fetchRepos(url);
+
+  }
+
+  closeModal = () => {
+    this.setState({modalOpen: false});
+  }
+
+  render() {
+    const { modalOpen } = this.state;
+    const { user: { fetching: fetchingUser, user: githubUser, error: userError }, repos: { fetching: loading, repos, error: reposError }} = this.props;
     const { 
       name, 
       company,
@@ -92,7 +73,7 @@ export class Home extends Component {
             </Message.Content>
           </Message>
         }
-        {Object.keys(githubUser).length &&
+        {!!Object.keys(githubUser).length &&
           <Grid centered columns={3}>
             <Grid.Row centered columns={3}>
               <Card>
@@ -108,7 +89,7 @@ export class Home extends Component {
                   <Card.Meta>
                     <span className='date'>Updated: {updated_at}</span>
                   </Card.Meta>
-                  <Card.Description>Repos: <Button primary>See {public_repos} repos</Button></Card.Description>
+                  <Card.Description>Repos: <Button primary onClick={this.openModal}>See {public_repos} repos</Button></Card.Description>
                 </Card.Content>
                 <Card.Content extra>
                   <a>
@@ -120,6 +101,12 @@ export class Home extends Component {
             </Grid.Row>
           </Grid>
         }
+        <Modal 
+          open={modalOpen}
+          loading={loading}
+          repos={repos}
+          closeModal={this.closeModal}
+        />
       </Fragment>
     );
   }

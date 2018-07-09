@@ -12,7 +12,7 @@ const repos = (
     case 'REPOS_SUCCESS':
       return Object.assign({}, state, {
         fetching: false,
-        categories: action.repos,
+        repos: action.repos,
       });
     case 'REPOS_FAILURE':
       return Object.assign({}, state, {
