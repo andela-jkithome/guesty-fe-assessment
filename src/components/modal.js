@@ -16,7 +16,7 @@ export default class Home extends Component {
   }
 
   render() {
-    const {open, loading, repos, closeModal } = this.props;
+    const {open, loading, repos, closeModal, error } = this.props;
     const { order } = this.state;
     const options = [
       { key: 'name', value: 'name', text: 'Name' },
@@ -26,6 +26,12 @@ export default class Home extends Component {
 
     return (
       <Fragment>
+        { error &&
+          <Message negative>
+            <Message.Header>Error</Message.Header>
+            <p>{error}</p>
+          </Message>
+        }
         {loading ?
           <Message icon>
             <Icon name='circle notched' loading />

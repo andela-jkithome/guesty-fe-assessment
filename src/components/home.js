@@ -73,6 +73,12 @@ export class Home extends Component {
             </Message.Content>
           </Message>
         }
+        { userError &&
+          <Message negative>
+            <Message.Header>Error</Message.Header>
+            <p>{userError}</p>
+          </Message>
+        }
         {!!Object.keys(githubUser).length &&
           <Grid centered columns={3}>
             <Grid.Row centered columns={3}>
@@ -106,6 +112,7 @@ export class Home extends Component {
           loading={loading}
           repos={repos}
           closeModal={this.closeModal}
+          error={reposError}
         />
       </Fragment>
     );
